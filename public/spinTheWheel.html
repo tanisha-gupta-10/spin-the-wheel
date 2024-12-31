@@ -42,7 +42,7 @@
 
     #spinTheWheel {
         display: flex;
-        /* justify-content: center; */
+        justify-content: center;
         font-family: 'Nunito', sans-serif !important;
         /* flex-direction: column; */
         /* align-items: center; */
@@ -506,10 +506,17 @@
         background-color: rgba(0, 0, 0, .15);
         box-shadow: 0 1px 1px 0 rgba(255, 255, 255, .75), inset 0 2px 2px rgba(0, 0, 0, .25);
     }
+
+    @media (min-width : 500px) {
+     #spin-wheel {
+        width: 600px;
+     }   
+    }
 </style>
 
 <body>
 
+    
     <section id="spinTheWheel">
 
         <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
