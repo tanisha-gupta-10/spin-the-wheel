@@ -1,0 +1,1133 @@
+<html>
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link rel="stylesheet" href="new_list.css"> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.jsdelivr.net/npm/agora-rtm-sdk@1.5.1/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+        integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin=""></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- <script src="swipe.js"></script> -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://vidyakul.com/css/font-awesome1.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<style>
+    body {
+        /* background-color: #1a0c68; */
+        min-height: 100vh;
+    }
+
+    #spinTheWheel {
+        display: flex;
+        /* justify-content: center; */
+        font-family: 'Nunito', sans-serif !important;
+        /* flex-direction: column; */
+        /* align-items: center; */
+        /* background-image: url('https://d2n7zouke881gi.cloudfront.net/randomUploads/webUsage/svgs/Frame7197.svg'); */
+        /* background-image: url('https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/59987/time_2024-12-27_15:03:18.png'); */
+        /* background-image: url('https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/64205/time_2024-12-27_15:03:18.png'); */
+        background-image: url('https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/23120/time_2024-12-27_15:03:18.png');
+        /* background-image: url('https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/93809/time_2024-08-22_17:57:01.png'); */
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100vh;
+        /* background-position: bottom; */
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 5;
+        transition: 0.5s;
+        /* animation: bottom-top .5s linear; */
+        /* transform: translateY(100%); */
+    }
+
+    @keyframes bottom-top {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0%);
+        }
+    }
+
+    text {
+        font-size: 11px;
+        font-weight: 700;
+        pointer-events: none;
+    }
+
+    #chart {
+        position: relative;
+        /* top: 140px;
+            left: 10px; */
+        transform-origin: center center;
+        transform: rotate(-90deg);
+    }
+
+    #question {
+        /* position: absolute; */
+        width: 100%;
+        /* height: 500px; */
+        padding: 15px;
+        text-align: center;
+    }
+
+    #spin-wheel {
+        display: flex;
+        width: 100%;
+        /* height: 100%; */
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0 0;
+        gap: 20px;
+    }
+
+    /* #question h1 {
+            font-size: 50px;
+            font-weight: bold;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            position: absolute;
+            padding: 0;
+            margin: 0;
+            top: 50%;
+            -webkit-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+        } */
+
+    #chart>svg {
+        /* width: 100%;
+            height: 100%; */
+        position: relative;
+        /* z-index: 2; */
+    }
+
+    .cross-icon img {
+        width: 30px;
+        height: 30px;
+        background-color: black;
+        border-radius: 50%;
+        padding: 5px;
+    }
+
+    .top-part {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .page-head {
+        font-size: 28px;
+        font-weight: 800;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        flex-wrap: wrap;
+        text-align: center;
+        gap: 20px;
+        padding-top: 20px;
+    }
+
+    .modal {
+        display: none;
+        position: relative;
+        /* position: fixed;
+            top: 44%;
+            left: 50%; */
+        /* transform: translate(-50%, -50%); */
+        padding: 20px;
+        background-color: #fff;
+        /* border: 5px solid #ddd; */
+        z-index: 200;
+        flex-direction: column;
+        justify-content: start;
+    }
+
+    .close {
+        color: white;
+        float: right;
+        font-size: 24px;
+        /* font-weight: 700; */
+        cursor: pointer;
+        text-align: center;
+        position: absolute;
+        right: 5px;
+        background-color: black;
+        border-radius: 50%;
+        width: 24px;
+        text-align: center;
+        top: 5px;
+        text-shadow: none;
+        opacity: 1;
+    }
+
+    .close:hover {
+        color: black;
+    }
+
+    .modal {
+        width: 80vw;
+        /* min-height: 40vh; */
+        height: max-content;
+        border-radius: 10px;
+    }
+
+    .elem-1 {
+        position: absolute;
+        /* width: 500px; */
+        transform: rotate(90deg) translate(-50%, 50%);
+        left: calc(44% + 11px);
+        top: 50%;
+        /* display: none; */
+        width: 310px;
+        border: 5px white dotted;
+        /* margin: 10px; */
+        border-radius: 50%;
+        height: 310px;
+        z-index: 2;
+        /* animation: rotate1 linear .5s; */
+
+    }
+
+    @keyframes rotate1 {
+        from {
+            transform: rotate(90deg);
+        }
+
+        to {
+            transform: rotate(1080deg);
+        }
+    }
+
+    .elem-2 {
+        position: absolute;
+        /* width: 500px; */
+        transform: rotate(90deg) translate(-50%, 50%);
+        left: calc(44% + 1px);
+        top: 50%;
+        /* display: none; */
+        width: 500px;
+        height: 500px;
+        /* border: 20px #011538 solid; */
+        /* margin: 10px; */
+        border-radius: 50%;
+        opacity: 0.2;
+    }
+
+    .confetti-lottie {
+        display: none;
+        position: absolute;
+        z-index: 4;
+        left: 50%;
+        top: 44%;
+        /* bottom: 0; */
+        transform: translate(-50%, -50%);
+    }
+
+    .tap-img {
+        position: absolute;
+        top: 53%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        width: 80px;
+    }
+
+    .modal-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        background: #00000070;
+    }
+
+    audio {
+        display: none;
+    }
+
+    .p-img {
+        /* border-radius: 6px; */
+        text-align: center;
+        font-size: xx-large;
+        font-weight: 700;
+    }
+
+    .tap-to-spin {
+        color: white;
+        background: #011538;
+        padding: 10px 30px 15px;
+        /* margin-top: 30px; */
+        border-radius: 5px;
+        font-weight: 800;
+        position: absolute;
+        bottom: 13%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .no-spin-cont {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        border-radius: 50%;
+        background-color: #332291;
+        padding: 30px 62px;
+        border: 5px solid #ff503e;
+    }
+
+    .no-spin-cont span {
+        font-size: 18px;
+        color: white;
+        font-weight: 800;
+    }
+
+    .timing {
+        color: white;
+    }
+
+    #the-final-countdown {
+        font-family: 'Lato', sans-serif;
+        text-align: center;
+        color: #eee;
+        font-size: 3rem;
+        /* border: 1px solid #000; */
+    }
+
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .ctas {
+        display: flex;
+        /* justify-content: space-between; */
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .cta {
+        font-weight: 700;
+        width: calc(100% / 2);
+        text-align: center;
+        padding: 5px;
+        border-radius: 8px;
+        font-size: 18px;
+    }
+
+    .cta1 {
+        color: #543ae3;
+        border: 2px solid #543ae3;
+        border-bottom: 5px solid #543ae3;
+        margin: 0;
+    }
+
+    .cta2 {
+        color: white;
+        background-color: #543ae3;
+        border-bottom: 5px solid #281591;
+        margin: 0;
+    }
+
+    .cross-icon {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        right: 40px;
+        position: relative;
+    }
+
+    .top-bottom {
+        animation: top-bottom .5s linear !important;
+        /* display: none !important; */
+    }
+
+    @keyframes top-bottom {
+        from {
+            transform: translateY(0%);
+            /* display: flex; */
+        }
+
+        to {
+            transform: translateY(100%);
+            /* display: none !important; */
+        }
+    }
+
+    @keyframes lightingBorder {
+        0% {
+            border: 5px dotted white;
+            /* border-bottom: none; */
+        }
+
+        50% {
+            border: 5px dotted #FFFF00;
+            /* box-shadow: 0 0 4px 3px yellow; */
+        }
+
+        100% {
+            border: 5px dotted white;
+            /* box-shadow: none; */
+        }
+    }
+
+    .modal .cross-icon {
+        right: 0;
+    }
+
+    /* From Uiverse.io by njesenberger */
+    .button {
+        -webkit-appearance: none;
+        appearance: none;
+        /* position: relative; */
+        border-width: 0;
+        padding: 0 8px 12px;
+        min-width: 10em;
+        box-sizing: border-box;
+        background: transparent;
+        font: inherit;
+        cursor: pointer;
+        width: 70%;
+        height: 70px;
+    }
+
+    .button-top {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 0;
+        padding: 8px 16px;
+        font-size: larger;
+        transform: translateY(0);
+        text-align: center;
+        width: 100%;
+        color: black;
+        font-weight: 700;
+        /* color: #fff; */
+        height: 100%;
+        text-shadow: 0 -1px rgba(0, 0, 0, .25);
+        transition-property: transform;
+        transition-duration: .2s;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    .button:active .button-top {
+        transform: translateY(6px);
+    }
+
+    .button-top::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        border-radius: 4px;
+        width: 100%;
+        height: 100%;
+        box-sizing: content-box;
+        background-image: radial-gradient(#ffe601, #ddbe32);
+        text-align: center;
+        color: #fff;
+        box-shadow: inset 0 0 0px 1px rgba(255, 255, 255, .2), 0 1px 2px 1px rgba(255, 255, 255, .2);
+        transition-property: border-radius, padding, width, transform;
+        transition-duration: .2s;
+    }
+
+    .button:active .button-top::after {
+        border-radius: 6px;
+        padding: 0 2px;
+    }
+
+    .button-bottom {
+        position: absolute;
+        z-index: -1;
+        bottom: 4px;
+        left: 4px;
+        border-radius: 8px / 16px 16px 8px 8px;
+        padding-top: 6px;
+        width: calc(100% - 8px);
+        height: calc(100% - 10px);
+        box-sizing: content-box;
+        background-color: #b49405;
+        /* background-image: radial-gradient(4px 8px at 4px calc(100% - 8px), rgba(255, 255, 255, .25), transparent), radial-gradient(4px 8px at calc(100% - 4px) calc(100% - 8px), rgba(255, 255, 255, .25), transparent), radial-gradient(16px at -4px 0, white, transparent), radial-gradient(16px at calc(100% + 4px) 0, white, transparent); */
+        /* box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.5), inset 0 -1px 3px 3px rgba(0, 0, 0, .4); */
+        transition-property: border-radius, padding-top;
+        transition-duration: .2s;
+    }
+
+    .button:active .button-bottom {
+        border-radius: 10px 10px 8px 8px / 8px;
+        padding-top: 0;
+    }
+
+    .button-base {
+        position: absolute;
+        z-index: -2;
+        top: 4px;
+        left: 0;
+        border-radius: 12px;
+        width: 100%;
+        height: calc(100% - 4px);
+        background-color: rgba(0, 0, 0, .15);
+        box-shadow: 0 1px 1px 0 rgba(255, 255, 255, .75), inset 0 2px 2px rgba(0, 0, 0, .25);
+    }
+</style>
+
+<body>
+
+    <section id="spinTheWheel">
+
+        <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+            type="module"></script>
+
+        <dotlottie-player src="https://lottie.host/edcaabbe-ad42-4cf5-804c-bc2bc488e75f/riJUJs4pdZ.json"
+            background="transparent" speed="1" style="width: 100%; height: 100%;" loop autoplay
+            class="confetti-lottie"></dotlottie-player>
+
+        <section id="spin-wheel">
+            <div class="cross-icon" style="display: flex;">
+                <img src="https://dkuddpry619qg.cloudfront.net/singleliveclass/new-single-liveclass/84279/time_2024-03-07_17:28:13.png"
+                    alt="">
+            </div>
+            <div class="spin-heads">
+                <div class="page-head">
+                    <img src="https://d2n7zouke881gi.cloudfront.net/randomUploads/webUsage/svgs/Frame7171.svg" alt=""
+                        style="width: 300px;">
+
+
+
+
+                </div>
+            </div>
+
+            <div class="spin-wheel-1" style="position: relative;">
+                <div id="chart">
+                    <!-- <img src="https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/22849/time_2024-11-08_12:56:05.png" alt=""
+                        class="elem-1"> -->
+                    <div src="https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/2496/time_2024-08-22_17:57:01.png"
+                        alt="" class="elem-1"></div>
+                    <!-- <div class="elem-2"></div> -->
+                    <!-- <img src="" alt="" class="elem-1"> -->
+
+                    <img src="https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/77001/time_2024-12-27_15:03:18.png"
+                        alt="" class="elem-2">
+                </div>
+                <!-- <img src="https://d2n7zouke881gi.cloudfront.net/randomUploads/webUsage/svgs/Frame7170.svg" alt=""
+                    class="tap-img"> -->
+
+
+                <img src="https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/48205/time_2024-08-22_11:24:49.png"
+                    alt="" class="tap-img">
+
+            </div>
+
+
+            <button type="button" class="button tap-to-spin">
+                <div class="button-top">SPIN</div>
+                <div class="button-bottom"></div>
+                <div class="button-base"></div>
+            </button>
+
+            <!-- <div class="tap-to-spin">
+                <span>
+                    Click To Spin
+                </span>
+                <img src="https://d2n7zouke881gi.cloudfront.net/randomUploads/webUsage/Group20293.svg" alt=""
+                    style="width: 30px; margin: auto;">
+            </div> -->
+
+        </section>
+
+        <audio controls="controls" id="wheel"
+            src="https://d2n7zouke881gi.cloudfront.net/randomUploads/webUsage/wheel.mp3" type="audio/mp3"></audio>
+    </section>
+
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <script>
+        var padding = { top: 0, right: 40, bottom: 0, left: 0 },
+            w = 360 - padding.left - padding.right,
+            h = 360 - padding.top - padding.bottom,
+            r = Math.min(w, h) / 2,
+            rotation = 0,
+            oldrotation = 0,
+            picked = 10000,
+            oldpick = [];
+
+        var gradientDefs = [
+            {
+                id: 'gradient1',
+                colors: ['#FC8F91', '#B51919']
+            },
+            {
+                id: 'gradient2',
+                colors: ['#6DF1FA', '#1B399D']
+            },
+            {
+                id: 'gradient3',
+                colors: ['#F13596', '#720F2A']
+            },
+            {
+                id: 'gradient4',
+                colors: ['#3AFD85', '#118D0B']
+            },
+            {
+                id: 'gradient5',
+                colors: ['#FEF807', '#BF4601']
+            },
+            {
+                id: 'gradient6',
+                colors: ['#8D79FF', '#5E2C80']
+            }
+        ];
+
+        // Function to define the gradients
+        function createGradients(svg, gradientDefs) {
+            var defs = svg.append("defs");
+
+            // console.log(svg);
+            gradientDefs.forEach(function (gradient, index) {
+                var linearGradient = defs.append("linearGradient")
+                    .attr("id", gradient.id)
+                    .attr("x1", "0%")
+                    .attr("y1", "0%")
+                    .attr("x2", "100%")
+                    .attr("y2", "100%");
+
+                linearGradient.append("stop")
+                    .attr("offset", "0%")
+                    .attr("stop-color", gradient.colors[0]);
+
+                linearGradient.append("stop")
+                    .attr("offset", "100%")
+                    .attr("stop-color", gradient.colors[1]);
+            });
+        }
+
+        function weightedChoice(choices, weights) {
+            // Normalize the weights to create a cumulative distribution
+            const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+            const cumulativeWeights = weights.map((w, i) =>
+                weights.slice(0, i + 1).reduce((sum, weight) => sum + weight, 0) / totalWeight
+            );
+
+            // Generate a random number between 0 and 1
+            const random = Math.random();
+
+            // Find the index corresponding to the random value
+            for (let i = 0; i < cumulativeWeights.length; i++) {
+                if (random < cumulativeWeights[i]) {
+                    return choices[i];
+                }
+            }
+        }
+
+
+        // color = d3.scaleOrdinal().range(["#ffcc00", "#99cc00", "#ff6666", "#3399ff", "#ff9933", "#cc66cc"]);
+        //randomNumbers = getRandomNumbers();
+        //http://osric.com/bingo-card-generator/?title=HTML+and+CSS+BINGO!&words=padding%2Cfont-family%2Ccolor%2Cfont-weight%2Cfont-size%2Cbackground-color%2Cnesting%2Cbottom%2Csans-serif%2Cperiod%2Cpound+sign%2C%EF%B9%A4body%EF%B9%A5%2C%EF%B9%A4ul%EF%B9%A5%2C%EF%B9%A4h1%EF%B9%A5%2Cmargin%2C%3C++%3E%2C{+}%2C%EF%B9%A4p%EF%B9%A5%2C%EF%B9%A4!DOCTYPE+html%EF%B9%A5%2C%EF%B9%A4head%EF%B9%A5%2Ccolon%2C%EF%B9%A4style%EF%B9%A5%2C.html%2CHTML%2CCSS%2CJavaScript%2Cborder&freespace=true&freespaceValue=Web+Design+Master&freespaceRandom=false&width=5&height=5&number=35#results
+        var data = [
+            { "label": "get 10% off coupon", "value": 1, "image_url": "https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/42352/time_2024-12-27_15:03:18.jpg" }, // padding
+            { "label": "get 20% off coupon", "value": 2, "image_url": "https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/8030/time_2024-12-27_15:03:18.jpg" }, //font-family
+            { "label": "get 50% off coupon", "value": 3, "image_url": "https://dkuddpry619qg.cloudfront.net/singleliveclass/new-single-liveclass/38652/time_2024-01-10_13:06:45.png" }, //color
+            { "label": "you got this for free", "value": 4, "image_url": "https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/96277/time_2024-12-27_15:03:18.jpg" }, //font-weight
+            { "label": "spin again", "value": 5, "image_url": "https://d2horkaojb0g6v.cloudfront.net/singleliveclass/new-single-liveclass/29703/time_2024-12-27_15:03:18.jpg" }, //font-size
+            { "label": "Better lucck next time", "value": 6, "image_url": "https://www.shutterstock.com/image-illustration/3d-better-luck-next-time-600nw-2504793495.jpg" }, //background-color
+        ];
+
+
+        const weights = [0.5, 0, 0, 0.5, 0, 0]; // 1: 50%, 2: 0%, 3: 0%, 4: 50%, 5: 0%, 6:0% -> for 1st visit
+        // const weights = [0.2, 0.4, 0, 0.2, 0, 0.2]; // 1: 20%, 2: 40%, 3: 0%, 4: 20%, 5: 0%, 6:20% -> for 2nd visit
+        // const weights = [0.15, 0.5, 0, 0.15, 0.05, 0.15]; // 1: 15%, 2: 50%, 3: 0%, 4: 15%, 5: 5%, 6:15% ->  for 3rd visit
+        // const weights = [0.18, 0.18, 0.18, 0.18, 0.18, 0.18]; // equal chances for testing rotational angles
+
+        function calculateRotationAngle(selectedIndex, totalItems) {
+            const segmentAngle = 360 / totalItems; // Angle per segment
+            const randomExtraRotations = Math.floor(Math.random() * 3) + 3; // Add extra rotations for effect
+            const finalAngle = 360 * randomExtraRotations + segmentAngle * selectedIndex;
+            return finalAngle;
+        }
+
+        // Example usage
+        const selected = weightedChoice(data, weights);
+        const selectedIndex = data.findIndex(item => item.label === selected.label) + 1;
+        const totalItems = data.length;
+        // let rotationAngle = calculateRotationAngle(selectedIndex, totalItems);
+        let rotationAngle;
+
+        console.log("Selected:", selected);
+        console.log("Selected index:", selectedIndex);
+
+        if (selectedIndex === 1) {
+            rotationAngle = 1420;
+        } else if (selectedIndex === 2) {
+            rotationAngle = 1380;
+        } else if (selectedIndex === 3) {
+            rotationAngle = 1320;
+        } else if (selectedIndex === 4) {
+            rotationAngle = 1980;
+        } else if (selectedIndex === 5) {
+            rotationAngle = 1920;
+        } else {
+            rotationAngle = 1860;
+        }
+
+        console.log("Rotation Angle:", rotationAngle);
+
+
+        // Call the function
+        // const result = weightedChoice(data, weights);
+        // console.log(result);
+
+        var svg = d3.select('#chart')
+            .append("svg")
+            .data([data])
+            .attr("width", w + padding.left + padding.right)
+            .attr("height", h + padding.top + padding.bottom);
+        var container = svg.append("g")
+            .attr("class", "chartholder")
+            .attr("transform", "translate(" + (w / 2 + padding.left + 10) + "," + (h / 2 + padding.top) + ")");
+        var vis = container
+            .append("g");
+
+        createGradients(svg, gradientDefs);
+
+        var pie = d3.layout.pie().sort(null).value(function (d) { return 1; }).startAngle(0); // 60 degrees = 1/6th of a full circle;
+
+        // declare an arc generator function
+        var arc = d3.svg.arc().outerRadius(r);
+
+        // select paths, use arc generator to draw
+        var arcs = vis.selectAll("g.slice")
+            .data(pie)
+            .enter()
+            .append("g")
+            .attr("class", "slice");
+
+        arcs.append("path")
+            .attr("fill", function (d, i) {
+                // Return different colors for odd and even indices
+                // console.log(gradientDefs[i])
+                // return gradientDefs[i].colors[0];
+                return "url(#gradient" + (i % gradientDefs.length + 1) + ")";
+
+                // return i % 3 === 0 ? "#FB4636" : i % 3 === 1 ? "#39A23E" : "#F69F06";
+                // return
+                // i % 2 === 0 ? "#FE5454" :
+                //     "#FFE14F";  // New color for index 3
+            })
+            .attr("d", arc) // Set the border color
+            .attr("stroke-width", "3px")
+            .attr("stroke", "#DEB22B") // Optional border color
+            .attr("d", function (d) { return arc(d); });
+
+        // Define gradients in <defs>
+        var defs = svg.append("defs");
+
+
+        // Apply gradient fill to arcs
+        // arcs.append("path")
+        //     .attr("fill", function (d, i) {
+        //         return "url(#gradient" + i + ")"; // Reference the gradient ID
+        //     })
+        //     .attr("d", arc) // Set arc geometry
+        //     .attr("stroke-width", "3px")
+        //     .attr("stroke", "#DEB22B"); // Optional border color
+
+
+        arcs.append("text").attr("transform", function (d) {
+            // d.innerRadius = 60;
+            d.outerRadius = r;
+            d.angle = (d.startAngle + d.endAngle) / 2;
+            return "rotate(" + (d.angle * 180 / Math.PI - 80) + ")translate(" + (r - 40) + ")";
+        })
+            .attr("text-anchor", "middle")
+            .style("font-size", "14px")
+            .style('font-weight', "bold")
+            .style("fill", function (d, i) {
+                // Set text color based on the corresponding arc's fill color
+                return i % 3 === 2 ? "black" : "black";
+            }) // Set font size as desired
+            .each(function (d) {
+                const words = d.data.label.split(" "); // Split label into words
+                const text = d3.select(this);
+                let y = 0;
+                const firstLine = words.slice(0, 2).join(" ");
+                const secondLine = words.slice(2).join(" ");
+                const tspan1 = text.append("tspan")
+                    .text(firstLine)
+                    .attr("x", 0)
+                    .attr("dy", "-1.2em")
+                    .attr("dx", "-1.5em"); // Adjust dy for line spacing
+
+                const tspan2 = text.append("tspan")
+                    .text(secondLine)
+                    .attr("x", 0)
+                    .attr("dy", "1.2em")
+                    .attr("dx", "-1.5em"); // Adjust dy for line spacing
+            });
+
+        container.on("click", spin);
+
+
+        $('.tap-img').on('click', spin);
+        $('.tap-to-spin').on('click', spin);
+
+
+        function spin(d) {
+
+
+            console.log('spinning');
+
+            setTimeout(() => {
+                wheel.play();
+            }, 200);
+
+            setTimeout(() => {
+                $('.tap-to-spin').hide();
+                
+            }, 700);
+
+            $('.elem-1').css('animation', 'lightingBorder 1s infinite');
+
+            setTimeout(() => {
+                wheel.pause();
+                $('.elem-1').css('animation', 'none');
+
+            }, 3000);
+
+            container.on("click", null);
+            $('.tap-img').on('click', null);
+            $('.tap-to-spin').on('click', null);
+
+            //all slices have been seen, all done
+            console.log("OldPick: " + oldpick.length, "Data length: " + data.length);
+            if (oldpick.length == data.length) {
+                console.log("done");
+                container.on("click", null);
+                return;
+            }
+            var ps = 360 / data.length,
+                pieslice = Math.round(1440 / data.length),
+                rng = Math.floor((Math.random() * 1440) + 360);
+
+            // rotation = (Math.round(rng / ps) * ps);
+
+            // rotation = -1020;  // it always stops as value 6
+            rotation = rotationAngle;  // it always stops as value 6
+
+
+
+            picked = Math.round(data.length - (rotation % 360) / ps);
+            picked = picked >= data.length ? (picked % data.length) : picked;
+
+
+            if (oldpick.indexOf(picked) !== -1) {
+                d3.select(this).call(spin);
+                return;
+            } else {
+                oldpick.push(picked);
+            }
+            rotation += 90 - Math.round(ps / 2);
+            vis.transition()
+                .duration(3000)
+                .attrTween("transform", rotTween)
+                .each("end", function () {
+                    //mark question as seen
+                    d3.select(".slice:nth-child(" + (picked + 1) + ") path")
+                        .attr("fill", "white");
+                    //populate question
+                    // d3.select("#question h1")
+                    //     .text(data[picked].question);
+                    oldrotation = rotation;
+
+                    /* Get the result value from object "data" */
+                    console.log(data[picked].value)
+                    // setTimeout(() => {
+                    $('.confetti-lottie').css('display', 'flex');
+                    // }, 2500);
+
+                    setTimeout(() => {
+                        $('.confetti-lottie').hide();
+                    }, 1000);
+                    /* Comment the below line for restrict spin to sngle time */
+                    container.on("click", spin);
+                    var modal1 = d3.select("body")
+                        .append("div")
+                        .attr("class", "modal-container");
+
+                    var modal = modal1.append("div").attr("class", "modal");
+                    // Add a close button to the modal
+                    modal.append("span")
+                        .attr("class", "cross-icon")
+                        .append("img").attr("src", "https://dkuddpry619qg.cloudfront.net/singleliveclass/new-single-liveclass/84279/time_2024-03-07_17:28:13.png")
+                        .html("&times;")
+                        .on("click", function () {
+                            modal1.style("display", "none");
+                            container.on("click", spin);
+                            $('.confetti-lottie').css('display', 'none');// Enable spinning after closing the modal
+                            $('.tap-to-spin span').text("No spin Available");
+                            $('.tap-to-spin img').hide();
+                            $('.tap-to-spin').css('bottom', "15%");
+                            $('.tap-img').hide();
+                            $('.chartholder').hide();
+                            $('.arrow').hide();
+                            $('#chart>svg').hide();
+                            $('.elem-1').hide();
+                            $('.elem-2').hide();
+                            $('#spin-wheel').css("gap", "60px");
+                            $('#chart').css("transform", "rotate(0)").css("border-radius", "50%").css("border", "3px solid yellow");
+                            $('#chart').append(`<div class="no-spin-cont">
+                                    <img src="https://d2n7zouke881gi.cloudfront.net/randomUploads/webUsage/svgs/_Group_1.svg" style="width: 80px">
+                                    <span>No spin available</span>
+                                    <div class="timing"> Come tomorrow! for new spin </div>
+                                    <div id="the-final-countdown">
+                                    <p></p>
+                                    </div>
+                                    </div>`);
+
+
+                            function updateCountdown() {
+                                var now = new Date();
+                                var targetTime = new Date(now);
+
+                                // Set targetTime to the next day at 23:59:59
+                                targetTime.setHours(23, 59, 59, 0);
+
+                                // Calculate the time remaining until the target time
+                                var timeRemaining = targetTime - now;
+                                console.log("TIME HERE", timeRemaining);
+
+                                // Convert the time remaining to hours, minutes, and seconds
+                                var hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                                var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                                var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                                // Format the output
+                                if (hours < 10) hours = '0' + hours;
+                                if (minutes < 10) minutes = '0' + minutes;
+                                if (seconds < 10) seconds = '0' + seconds;
+
+                                // Display the countdown
+                                jQuery('#the-final-countdown p').html(hours + ':' + minutes + ':' + seconds);
+                            }
+
+                            // Update the countdown every second
+                            setInterval(updateCountdown, 1000);
+
+                            // Initial update
+                            updateCountdown();
+
+                            // const renewalTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+
+                            // console.log(renewalTime);
+                            // Set a timeout to renew the spin after 24 hours
+                            // setTimeout(function () {
+                            //     // Code to renew the spin after 24 hours
+                            //     // Add your logic here to enable spinning again
+                            // }, renewalTime - new Date().getTime());
+                        });
+
+
+
+                    // Add the question text to the modal
+                    // modal.append("img").attr("class", "p-img")
+                    //     .attr("src", data[picked].image_url);
+
+                    modal.append("div").attr("class", "p-img")
+                        .text(data[picked].label);
+
+                    if (data[picked].value !== 6) {
+
+
+                        modal.append("div").attr("class", "ctas")
+                            .append("div").attr("class", "cta cta1")
+                            .text("Cancel")
+                            .on("click", function () {
+                                modal1.style("display", "none");
+                                container.on("click", spin);
+                                $('.confetti-lottie').css('display', 'none');// Enable spinning after closing the modal
+
+                                $('.tap-to-spin span').text("No spin Available");
+                                $('.tap-to-spin img').hide();
+                                $('.elem-2').hide();
+                                $('.tap-to-spin').hide();
+                                $('button').css('display', 'none !important');
+                                $('.tap-img').hide();
+                                $('.button-top').hide();
+                                $('.button-bottom').hide();
+                                $('.button-base').hide();
+                                $('.chartholder').hide();
+                                $('.arrow').hide();
+                                $('#chart>svg').hide();
+                                $('.tap-to-spin').show();
+                                $('.elem-1').hide();
+                                $('#spin-wheel').css("gap", "60px");
+                                $('#chart').css("transform", "rotate(0)").css("border-radius", "50%").css("border", "3px solid yellow");
+                                $('#chart').append(`<div class="no-spin-cont">
+                                    <img src="https://d2n7zouke881gi.cloudfront.net/randomUploads/webUsage/svgs/_Group_1.svg" style="width: 80px">
+                                    <span>No spin available</span>
+                                    <div class="timing"> Come tomorrow! for new spin </div>
+                                    <div id="the-final-countdown">
+                                    <p></p>
+                                    </div>
+                                    </div>`);
+
+                                function updateCountdown() {
+                                    var now = new Date();
+                                    var targetTime = new Date(now);
+
+                                    // Set targetTime to the next day at 23:59:59
+                                    targetTime.setHours(23, 59, 59, 0);
+
+                                    // Calculate the time remaining until the target time
+                                    var timeRemaining = targetTime - now;
+                                    console.log("TIME HERE", timeRemaining);
+
+                                    // Convert the time remaining to hours, minutes, and seconds
+                                    var hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                                    var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                                    var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                                    // Format the output
+                                    if (hours < 10) hours = '0' + hours;
+                                    if (minutes < 10) minutes = '0' + minutes;
+                                    if (seconds < 10) seconds = '0' + seconds;
+
+                                    // Display the countdown
+                                    jQuery('#the-final-countdown p').html(hours + ':' + minutes + ':' + seconds);
+                                }
+
+                                // Update the countdown every second
+                                setInterval(updateCountdown, 1000);
+
+                                // Initial update
+                                updateCountdown();
+                            });
+                    }
+
+                    // Adding the second div with class "cta cta2"
+                    d3.select(".ctas")
+                        .append("div").attr("class", "cta cta2").text("Join");
+
+                    // Show the modal
+                    modal.style("display", "flex");
+
+                    // Load and play the Lottie animation
+
+                    // Disable spinning while the modal is open
+                    container.on("click", null);
+                    $('.tap-img').on('click', null);
+                    $('.tap-to-spin').on('click', null);
+
+
+                    oldrotation = rotation;
+                });
+
+
+        }
+
+
+
+        //make arrow
+        // Add the arrow
+        svg.append("g")
+            .attr("transform", "translate(" + (183) + "," + (175) + ")")
+            .attr("class", "arrow")
+            .append("path")
+            .attr("d", "M-" + (r * .10) + ",0L0," + (r * .05) + "L0,-" + (r * .05) + "Z")
+            .style({ "fill": "rgb(51, 34, 145)", "transform": "rotate(180deg)" });
+
+        //draw spin circle
+        container.append("circle")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("r", 30)
+            .style({ "fill": "#332291", "cursor": "pointer" });
+        //spin text
+        container.append("text")
+            .attr("x", 0)
+            .attr("y", 7)
+            .attr("text-anchor", "middle")
+            .text("SPIN")
+            .style({ "font-weight": "bold", "font-size": "18px", "transform": "rotate(90deg)", "fill": "white" });
+
+
+        function rotTween(to) {
+            var i = d3.interpolate(oldrotation % 360, rotation);
+            return function (t) {
+                return "rotate(" + i(t) + ")";
+            };
+        }
+
+        // $('.tap-img').on('click', function(){
+        //     $('.elem-2').addClass('rotate');
+        //     setTimeout(() => {
+        //         $('.elem-2').removeClass('rotate');  
+        //     }, 2800);
+        // });
+
+
+        function getRandomNumbers() {
+            var array = new Uint16Array(1000);
+            var scale = d3.scale.linear().range([360, 1440]).domain([0, 100000]);
+            if (window.hasOwnProperty("crypto") && typeof window.crypto.getRandomValues === "function") {
+                window.crypto.getRandomValues(array);
+                console.log("works");
+            } else {
+                //no support for crypto, get crappy random numbers
+                for (var i = 0; i < 1000; i++) {
+                    array[i] = Math.floor(Math.random() * 100000) + 1;
+                }
+            }
+            return array;
+        }
+
+        $('.cross-icon').on('click', function (e) {
+            console.log(478999);
+
+            $('#spinTheWheel').addClass('top-bottom').hide();
+        });
+    </script>
+</body>
+
+</html>
